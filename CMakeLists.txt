@@ -40,6 +40,8 @@ target_include_directories(lib_gui PUBLIC ./lib/imgui/backends/gl3w)
 target_include_directories(lib_gui PUBLIC ./lib/implot)
 target_include_directories(lib_gui PUBLIC ./lib/clip)
 target_include_directories(lib_gui PUBLIC ./lib/nfde)
+#target_include_directories(lib_gui PUBLIC ./lib/nanosvg)
+#target_include_directories(lib_gui PUBLIC ./lib/isvg)
 
 target_link_libraries(lib_gui PUBLIC shlwapi)
 target_link_libraries(lib_gui PUBLIC opengl32)
