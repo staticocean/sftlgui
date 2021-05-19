@@ -10,26 +10,50 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
 add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 add_compile_definitions(IMGUI_DEFINE_MATH_OPERATORS)
 
-file(GLOB src_imgui
-        ./lib/imgui/*
-        ./lib/imgui/backends/imgui_impl_opengl3.cpp
-        ./lib/imgui/backends/imgui_impl_glfw.cpp
-        ./lib/imgui/backends/gl3w/GL/gl3w.c
-        )
+if (UNIX)
+
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DVK_PROTOTYPES")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVK_PROTOTYPES")
+
+    # GLFW
+
+    # sudo apt install libgtk-3-dev
+    # libglfw3-dev
+
+    find_package(Vulkan REQUIRED)
+    find_package(glfw3 REQUIRED)
+    set(LIBRARIES "glfw;Vulkan::Vulkan")
+
+    # Use vulkan headers from glfw:
+    include_directories(${GLFW_DIR}/deps)
+    include_directories(${GLEW_INCLUDE_DIRS})
+
+    include_directories(./lib/imgui/backends/)
+    include_directories(./lib/imgui/examples/libs/)
+
+    file(GLOB src_imgui
+            ./lib/imgui/*.cpp
+            ./lib/imgui/backends/imgui_impl_vulkan.cpp
+            ./lib/imgui/backends/imgui_impl_glfw.cpp
+            )
+
+endif (UNIX)
+
+if (WIN32)
+    file(GLOB src_imgui
+            ./lib/imgui/*
+            ./lib/imgui/backends/imgui_impl_opengl3.cpp
+            ./lib/imgui/backends/imgui_impl_glfw.cpp
+            ./lib/imgui/backends/gl3w/GL/gl3w.c
+            )
+endif (WIN32)
 
 file(GLOB src_implot
         ./lib/implot/*
         )
 
-file(GLOB src_clip
-        ./lib/clip/clip.cpp
-        ./lib/clip/image.cpp
-        ./lib/clip/clip_win.cpp
-        )
-
-file(GLOB src_nfde
-        ./lib/nfde/nfd_win.cpp
-        )
+add_subdirectory(./lib/clip/)
+add_subdirectory(./lib/nfde/)
 
 add_library(lib_gui ${src_imgui} ${src_implot} ${src_clip} ${src_nfde})
 
@@ -39,11 +63,19 @@ target_include_directories(lib_gui PUBLIC ./lib/imgui/backends/glfw/include)
 target_include_directories(lib_gui PUBLIC ./lib/imgui/backends/gl3w)
 target_include_directories(lib_gui PUBLIC ./lib/implot)
 target_include_directories(lib_gui PUBLIC ./lib/clip)
-target_include_directories(lib_gui PUBLIC ./lib/nfde)
-#target_include_directories(lib_gui PUBLIC ./lib/nanosvg)
-#target_include_directories(lib_gui PUBLIC ./lib/isvg)
+target_include_directories(lib_gui PUBLIC ./lib/nfde/src/include)
 
-target_link_libraries(lib_gui PUBLIC shlwapi)
-target_link_libraries(lib_gui PUBLIC opengl32)
-target_link_libraries(lib_gui PUBLIC ${CMAKE_CURRENT_LIST_DIR}/lib/imgui/backends/glfw/lib-vc2010-64/glfw3.lib )
+if (WIN32)
+    target_link_libraries(lib_gui PUBLIC shlwapi)
+    target_link_libraries(lib_gui PUBLIC opengl32)
+endif(WIN32)
+
+target_link_libraries(lib_gui PUBLIC clip)
+target_link_libraries(lib_gui PUBLIC nfd)
+
+if (UNIX)
+    target_link_libraries(lib_gui PUBLIC Vulkan::Vulkan)
+    target_link_libraries(lib_gui PUBLIC glfw)
+endif (UNIX)
+
 
