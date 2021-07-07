@@ -40,16 +40,18 @@ if (UNIX)
 endif (UNIX)
 
 if (WIN32)
+
     file(GLOB src_imgui
-            ./lib/imgui/*
+            ./lib/imgui/*.cpp
             ./lib/imgui/backends/imgui_impl_opengl3.cpp
             ./lib/imgui/backends/imgui_impl_glfw.cpp
-            ./lib/imgui/backends/gl3w/GL/gl3w.c
+            ./lib/imgui/examples/libs/gl3w/GL/gl3w.c
             )
+
 endif (WIN32)
 
 file(GLOB src_implot
-        ./lib/implot/*
+        ./lib/implot/*.cpp
         )
 
 add_subdirectory(./lib/clip/)
@@ -68,6 +70,16 @@ target_include_directories(lib_gui PUBLIC ./lib/nfde/src/include)
 if (WIN32)
     target_link_libraries(lib_gui PUBLIC shlwapi)
     target_link_libraries(lib_gui PUBLIC opengl32)
+    target_link_libraries(lib_gui PUBLIC gdi32)
+    target_link_libraries(lib_gui PUBLIC shell32)
+    target_link_libraries(lib_gui PUBLIC glu32)
+
+    find_library(lib_glfw3 glfw3 HINTS lib/imgui/examples/libs/glfw/lib-vc2010-64)
+    target_link_libraries(lib_gui PUBLIC ${lib_glfw3})
+
+    target_include_directories(lib_gui PUBLIC ./lib/imgui/backends/)
+    target_include_directories(lib_gui PUBLIC ./lib/imgui/examples/libs/glfw/include)
+    target_include_directories(lib_gui PUBLIC ./lib/imgui/examples/libs/gl3w)
 endif(WIN32)
 
 target_link_libraries(lib_gui PUBLIC clip)
