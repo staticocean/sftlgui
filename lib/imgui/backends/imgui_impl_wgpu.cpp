@@ -6,12 +6,15 @@
 //  [X] Renderer: User texture binding. Use 'WGPUTextureView' as ImTextureID. Read the FAQ about ImTextureID!
 //  [X] Renderer: Support for large meshes (64k+ vertices) with 16-bit indices.
 
-// You can copy and use unmodified imgui_impl_* files in your project. See examples/ folder for examples of using this.
+// You can use unmodified imgui_impl_* files in your project. See examples/ folder for examples of using this. 
+// Prefer including the entire imgui/ repository into your project (either as a copy or as a submodule), and only build the backends you need.
 // If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of imgui.cpp.
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
 
 // CHANGELOG
 // (minor and older changes stripped away, please see git history for details)
+//  2021-05-24: Add support for draw_data->FramebufferScale.
+//  2021-05-19: Replaced direct access to ImDrawCmd::TextureId with a call to ImDrawCmd::GetTexID(). (will become a requirement)
 //  2021-05-16: Update to latest WebGPU specs (compatible with Emscripten 2.0.20 and Chrome Canary 92).
 //  2021-02-18: Change blending equation to preserve alpha in output buffer.
 //  2021-01-28: Initial version.
@@ -306,7 +309,7 @@ static void ImGui_ImplWGPU_SetupRenderState(ImDrawData* draw_data, WGPURenderPas
     }
 
     // Setup viewport
-    wgpuRenderPassEncoderSetViewport(ctx, 0, 0, draw_data->DisplaySize.x, draw_data->DisplaySize.y, 0, 1);
+    wgpuRenderPassEncoderSetViewport(ctx, 0, 0, draw_data->FramebufferScale.x * draw_data->DisplaySize.x, draw_data->FramebufferScale.y * draw_data->DisplaySize.y, 0, 1);
 
     // Bind shader and vertex buffers
     wgpuRenderPassEncoderSetVertexBuffer(ctx, 0, fr->VertexBuffer, 0, 0);
@@ -405,6 +408,7 @@ void ImGui_ImplWGPU_RenderDrawData(ImDrawData* draw_data, WGPURenderPassEncoder 
     // (Because we merged all buffers into a single one, we maintain our own offset into them)
     int global_vtx_offset = 0;
     int global_idx_offset = 0;
+    ImVec2 clip_scale = draw_data->FramebufferScale;
     ImVec2 clip_off = draw_data->DisplayPos;
     for (int n = 0; n < draw_data->CmdListsCount; n++)
     {
@@ -424,24 +428,26 @@ void ImGui_ImplWGPU_RenderDrawData(ImDrawData* draw_data, WGPURenderPassEncoder 
             else
             {
                 // Bind custom texture
-                auto bind_group = g_resources.ImageBindGroups.GetVoidPtr(ImHashData(&pcmd->TextureId, sizeof(ImTextureID)));
+                ImTextureID tex_id = pcmd->GetTexID();
+                ImGuiID tex_id_hash = ImHashData(&tex_id, sizeof(tex_id));
+                auto bind_group = g_resources.ImageBindGroups.GetVoidPtr(tex_id_hash);
                 if (bind_group)
                 {
                     wgpuRenderPassEncoderSetBindGroup(pass_encoder, 1, (WGPUBindGroup)bind_group, 0, NULL);
                 }
                 else
                 {
-                    WGPUBindGroup image_bind_group = ImGui_ImplWGPU_CreateImageBindGroup(g_resources.ImageBindGroupLayout, (WGPUTextureView)pcmd->TextureId);
-                    g_resources.ImageBindGroups.SetVoidPtr(ImHashData(&pcmd->TextureId, sizeof(ImTextureID)), image_bind_group);
+                    WGPUBindGroup image_bind_group = ImGui_ImplWGPU_CreateImageBindGroup(g_resources.ImageBindGroupLayout, (WGPUTextureView)tex_id);
+                    g_resources.ImageBindGroups.SetVoidPtr(tex_id_hash, image_bind_group);
                     wgpuRenderPassEncoderSetBindGroup(pass_encoder, 1, image_bind_group, 0, NULL);
                 }
 
                 // Apply Scissor, Bind texture, Draw
                 uint32_t clip_rect[4];
-                clip_rect[0] = static_cast<uint32_t>(pcmd->ClipRect.x - clip_off.x);
-                clip_rect[1] = static_cast<uint32_t>(pcmd->ClipRect.y - clip_off.y);
-                clip_rect[2] = static_cast<uint32_t>(pcmd->ClipRect.z - clip_off.x);
-                clip_rect[3] = static_cast<uint32_t>(pcmd->ClipRect.w - clip_off.y);
+                clip_rect[0] = (uint32_t)(clip_scale.x * (pcmd->ClipRect.x - clip_off.x));
+                clip_rect[1] = (uint32_t)(clip_scale.y * (pcmd->ClipRect.y - clip_off.y));
+                clip_rect[2] = (uint32_t)(clip_scale.x * (pcmd->ClipRect.z - clip_off.x));
+                clip_rect[3] = (uint32_t)(clip_scale.y * (pcmd->ClipRect.w - clip_off.y));
                 wgpuRenderPassEncoderSetScissorRect(pass_encoder, clip_rect[0], clip_rect[1], clip_rect[2] - clip_rect[0], clip_rect[3] - clip_rect[1]);
                 wgpuRenderPassEncoderDrawIndexed(pass_encoder, pcmd->ElemCount, 1, pcmd->IdxOffset + global_idx_offset, pcmd->VtxOffset + global_vtx_offset, 0);
             }
@@ -495,7 +501,7 @@ static void ImGui_ImplWGPU_CreateFontsTexture()
         layout.offset = 0;
         layout.bytesPerRow = width * size_pp;
         layout.rowsPerImage = height;
-        WGPUExtent3D size = { static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1 };
+        WGPUExtent3D size = { (uint32_t)width, (uint32_t)height, 1 };
         wgpuQueueWriteTexture(g_defaultQueue, &dst_view, pixels, (uint32_t)(width * size_pp * height), &layout, &size);
     }
 
