@@ -12,16 +12,22 @@ add_compile_definitions(IMGUI_DEFINE_MATH_OPERATORS)
 
 if (UNIX)
 
+#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lSDL2main")
+#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lSDL2")
+
     # sudo apt install libglew-dev
     # libglfw3-dev
 
-    find_package(glfw3 REQUIRED)
+#    find_package(glfw3 REQUIRED)
 #    find_package(GLEW REQUIRED)
     find_package(OpenGL REQUIRED)
+    find_package(SDL2 REQUIRED)
 
     # Use vulkan headers from glfw:
-    include_directories(${GLFW_DIR}/deps)
+#    include_directories(${GLFW_DIR}/deps)
 #    include_directories(${GLEW_INCLUDE_DIRS})
+    include_directories(${SDL2_INCLUDE_DIRS})
+    link_directories(${SDL2_INCLUDE_DIRS})
     include_directories(${OPENGL_INCLUDE_DIRS})
     link_directories(${OPENGL_LIBRARY_DIRS})
 
@@ -31,7 +37,7 @@ if (UNIX)
     file(GLOB src_imgui
             ./lib/imgui/*.cpp
             ./lib/imgui/backends/imgui_impl_opengl3.cpp
-            ./lib/imgui/backends/imgui_impl_glfw.cpp
+            ./lib/imgui/backends/imgui_impl_sdl.cpp
             )
 
 endif (UNIX)
@@ -84,8 +90,9 @@ target_link_libraries(lib_gui PUBLIC nfd)
 
 if (UNIX)
 
-target_link_libraries(lib_gui PUBLIC glfw)
+#target_link_libraries(lib_gui PUBLIC glfw)
 #target_link_libraries(lib_gui PUBLIC ${GLEW_LIBRARIES})
+target_link_libraries(lib_gui PUBLIC ${SDL2_LIBRARIES})
 target_link_libraries(lib_gui PUBLIC OpenGL::GL)
 target_link_libraries(lib_gui PUBLIC ${CMAKE_DL_LIBS})
 target_link_libraries(lib_gui PUBLIC ${OPENGL_LIBRARIES})
