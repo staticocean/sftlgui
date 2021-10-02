@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(lib_gui CXX)
+project(libgui CXX)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-write-strings")
@@ -28,13 +28,13 @@ if (UNIX)
     include_directories(${GLFW_DIR}/deps)
     include_directories(${GLEW_INCLUDE_DIRS})
 
-    include_directories(./lib/imgui/backends/)
-    include_directories(./lib/imgui/examples/libs/)
+    include_directories(./imgui/backends/)
+    include_directories(./imgui/examples/libs/)
 
     file(GLOB src_imgui
-            ./lib/imgui/*.cpp
-            ./lib/imgui/backends/imgui_impl_vulkan.cpp
-            ./lib/imgui/backends/imgui_impl_glfw.cpp
+            ./imgui/*.cpp
+            ./imgui/backends/imgui_impl_vulkan.cpp
+            ./imgui/backends/imgui_impl_glfw.cpp
             )
 
 endif (UNIX)
@@ -42,51 +42,51 @@ endif (UNIX)
 if (WIN32)
 
     file(GLOB src_imgui
-            ./lib/imgui/*.cpp
-            ./lib/imgui/backends/imgui_impl_opengl3.cpp
-            ./lib/imgui/backends/imgui_impl_glfw.cpp
-            ./lib/imgui/examples/libs/gl3w/GL/gl3w.c
+            ./imgui/*.cpp
+            ./imgui/backends/imgui_impl_opengl3.cpp
+            ./imgui/backends/imgui_impl_glfw.cpp
+            ./imgui/examples/libs/gl3w/GL/gl3w.c
             )
 
 endif (WIN32)
 
 file(GLOB src_implot
-        ./lib/implot/*.cpp
+        ./implot/*.cpp
         )
 
-add_subdirectory(./lib/clip/)
-add_subdirectory(./lib/nfde/)
+add_subdirectory(./clip/)
+add_subdirectory(./nfde/)
 
-add_library(lib_gui ${src_imgui} ${src_implot} ${src_clip} ${src_nfde})
+add_library(libgui ${src_imgui} ${src_implot} ${src_clip} ${src_nfde})
 
-target_include_directories(lib_gui PUBLIC ./)
-target_include_directories(lib_gui PUBLIC ./lib/imgui)
-target_include_directories(lib_gui PUBLIC ./lib/imgui/backends/glfw/include)
-target_include_directories(lib_gui PUBLIC ./lib/imgui/backends/gl3w)
-target_include_directories(lib_gui PUBLIC ./lib/implot)
-target_include_directories(lib_gui PUBLIC ./lib/clip)
-target_include_directories(lib_gui PUBLIC ./lib/nfde/src/include)
+target_include_directories(libgui PUBLIC ./)
+target_include_directories(libgui PUBLIC ./imgui)
+target_include_directories(libgui PUBLIC ./imgui/backends/glfw/include)
+target_include_directories(libgui PUBLIC ./imgui/backends/gl3w)
+target_include_directories(libgui PUBLIC ./implot)
+target_include_directories(libgui PUBLIC ./clip)
+target_include_directories(libgui PUBLIC ./nfde/src/include)
 
 if (WIN32)
-    target_link_libraries(lib_gui PUBLIC shlwapi)
-    target_link_libraries(lib_gui PUBLIC opengl32)
-    target_link_libraries(lib_gui PUBLIC gdi32)
-    target_link_libraries(lib_gui PUBLIC shell32)
-    target_link_libraries(lib_gui PUBLIC glu32)
+    target_link_libraries(libgui PUBLIC shlwapi)
+    target_link_libraries(libgui PUBLIC opengl32)
+    target_link_libraries(libgui PUBLIC gdi32)
+    target_link_libraries(libgui PUBLIC shell32)
+    target_link_libraries(libgui PUBLIC glu32)
 
-    find_library(lib_glfw3 glfw3 HINTS lib/imgui/examples/libs/glfw/lib-vc2010-64)
-    target_link_libraries(lib_gui PUBLIC ${lib_glfw3})
+    find_library(lib_glfw3 glfw3 HINTS imgui/examples/libs/glfw/lib-vc2010-64)
+    target_link_libraries(libgui PUBLIC ${lib_glfw3})
 
-    target_include_directories(lib_gui PUBLIC ./lib/imgui/backends/)
-    target_include_directories(lib_gui PUBLIC ./lib/imgui/examples/libs/glfw/include)
-    target_include_directories(lib_gui PUBLIC ./lib/imgui/examples/libs/gl3w)
+    target_include_directories(libgui PUBLIC ./imgui/backends/)
+    target_include_directories(libgui PUBLIC ./imgui/examples/libs/glfw/include)
+    target_include_directories(libgui PUBLIC ./imgui/examples/libs/gl3w)
 endif(WIN32)
 
-target_link_libraries(lib_gui PUBLIC clip)
-target_link_libraries(lib_gui PUBLIC nfd)
+target_link_libraries(libgui PUBLIC clip)
+target_link_libraries(libgui PUBLIC nfd)
 
 if (UNIX)
-    target_link_libraries(lib_gui PUBLIC Vulkan::Vulkan)
-    target_link_libraries(lib_gui PUBLIC glfw)
+    target_link_libraries(libgui PUBLIC Vulkan::Vulkan)
+    target_link_libraries(libgui PUBLIC glfw)
 endif (UNIX)
 

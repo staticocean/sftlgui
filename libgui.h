@@ -5,8 +5,8 @@
 //----------------------------------------------------------------
 
 #include <res/fonts/default_font.h>
-#include <lib/imgui/imgui.h>
-#include <lib/implot/implot.h>
+#include <imgui/imgui.h>
+#include <implot/implot.h>
 #include <nfd.h>
 
 //----------------------------------------------------------------
