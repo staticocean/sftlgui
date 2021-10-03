@@ -11,13 +11,13 @@
 
 //----------------------------------------------------------------
 
-inline void imgui_mat_get(void *ptr, vlf_t *mat, vlf_t *def)
+inline void imgui_mat_get(void *ptr, float64_t *mat, float64_t *def)
 {
 	ImGuiWindow* window = ImGui::GetCurrentWindow();
 	
-	s_vl_hpr def_hpr = vl_hpr(def);
+	s_vl3hpr def_hpr = vl3hpr_mat(def);
 	
-	s_vl_hpr hpr = {
+	s_vl3hpr hpr = {
 //			.heading = window->StateStorage.GetFloat(ImGui::GetID((void*) ((uintptr_t) ptr + 0x00)), vl_rad(45)),
 //			.pitch 	 = window->StateStorage.GetFloat(ImGui::GetID((void*) ((uintptr_t) ptr + 0x01)), vl_rad(45)),
 //			.roll    = window->StateStorage.GetFloat(ImGui::GetID((void*) ((uintptr_t) ptr + 0x02)), vl_rad( 0)),
@@ -26,18 +26,18 @@ inline void imgui_mat_get(void *ptr, vlf_t *mat, vlf_t *def)
 			.roll    = window->StateStorage.GetFloat(ImGui::GetID((void*) ((uintptr_t) ptr + 0x02)), def_hpr.roll),
 	};
 	
-	vl3_rot(mat, hpr);
+	vl3m_rot(mat, hpr);
 	
 	return;
 }
 
 //----------------------------------------------------------------
 
-inline void imgui_mat_set(void *ptr, vlf_t *mat)
+inline void imgui_mat_set(void *ptr, float64_t *mat)
 {
 	ImGuiWindow* window = ImGui::GetCurrentWindow();
 	
-	s_vl_hpr hpr = vl_hpr(mat);
+	s_vl3hpr hpr = vl3hpr_mat(mat);
 	
 	window->StateStorage.SetFloat(ImGui::GetID((void*) ((uintptr_t) ptr + 0x00)), (float) hpr.heading);
 	window->StateStorage.SetFloat(ImGui::GetID((void*) ((uintptr_t) ptr + 0x01)), (float) hpr.pitch);
@@ -48,7 +48,7 @@ inline void imgui_mat_set(void *ptr, vlf_t *mat)
 
 //----------------------------------------------------------------
 
-inline void imgui_vec(char *label, vlf_t *vec, float v_speed, vlf_t *min, vlf_t *max, char *format)
+inline void imgui_vec(char *label, float64_t *vec, float v_speed, float64_t *min, float64_t *max, char *format)
 {
 	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 	ImGui::DragScalarN(label, ImGuiDataType_Double, vec, 3, v_speed, min, max, format);
@@ -58,24 +58,24 @@ inline void imgui_vec(char *label, vlf_t *vec, float v_speed, vlf_t *min, vlf_t 
 
 //----------------------------------------------------------------
 
-inline void imgui_hpr(char *label, s_vl_hpr *hpr, float v_speed, char *format)
+inline void imgui_hpr(char *label, s_vl3hpr *hpr, float v_speed, char *format)
 {
-	static vlf_t heading_min = 0.0;
-	static vlf_t heading_max = 360.0;
+	static float64_t heading_min = 0.0;
+	static float64_t heading_max = 360.0;
 	
-	static vlf_t pitch_min = -90.0;
-	static vlf_t pitch_max = +90.0;
+	static float64_t pitch_min = -90.0;
+	static float64_t pitch_max = +90.0;
 	
-	static vlf_t roll_min = -180.0;
-	static vlf_t roll_max = +180.0;
+	static float64_t roll_min = -180.0;
+	static float64_t roll_max = +180.0;
 	
-	s_vl_hpr hpr_deg;
+	s_vl3hpr hpr_deg;
 	
 	hpr_deg.heading = vl_deg(hpr->heading);
 	hpr_deg.pitch   = vl_deg(hpr->pitch);
 	hpr_deg.roll    = vl_deg(hpr->roll);
 
-//	vlf_t hpr_deg[3] = {
+//	float64_t hpr_deg[3] = {
 //			(float) vl_deg(hpr->heading),
 //			(float) vl_deg(hpr->pitch),
 //			(float) vl_deg(hpr->roll)
@@ -114,7 +114,7 @@ inline void imgui_hpr(char *label, s_vl_hpr *hpr, float v_speed, char *format)
 
 //----------------------------------------------------------------
 
-inline void imgui_mat(char *label, vlf_t *mat, float v_speed, vlf_t *min, vlf_t *max, char *format)
+inline void imgui_mat(char *label, float64_t *mat, float v_speed, float64_t *min, float64_t *max, char *format)
 {
 	ImGui::PushID(label);
 	
@@ -139,7 +139,7 @@ inline void imgui_mat(char *label, vlf_t *mat, float v_speed, vlf_t *min, vlf_t 
 
 //----------------------------------------------------------------
 
-inline void imgui_rot(char *label, vlf_t *mat)
+inline void imgui_rot(char *label, float64_t *mat)
 {
 	enum st
 	{
@@ -168,30 +168,30 @@ inline void imgui_rot(char *label, vlf_t *mat)
 			
 			vl3d_view_load(mat, &vl3d_view, (s_vl3d_view) {});
 			vl3d_view.scale = 0.75;
-			vl3_vset(vl3d_view.pos, 0.0);
+			vl3v_set(vl3d_view.pos, 0.0);
 			
 			vl3d_init(&vl3d, (s_vl3d_attr) {
 				.obj_sz = sizeof(vl3d_obj_list) / sizeof(s_vl3d_obj),
 				.obj_ls = vl3d_obj_list
 			});
 			
-			vl3d_draw_arrow(&vl3d, vl3d_col_d, vl_vec(-1.0, +0.0, +0.0), vl_vec(+1.0, +0.0, +0.0) );
-			vl3d_draw_arrow(&vl3d, vl3d_col_d, vl_vec(+0.0, -1.0, +0.0), vl_vec(+0.0, +1.0, +0.0) );
-			vl3d_draw_arrow(&vl3d, vl3d_col_d, vl_vec(+0.0, +0.0, -1.0), vl_vec(+0.0, +0.0, +1.0) );
+			vl3d_draw_arrow(&vl3d, vl3d_col_d, vl3v(-1.0, +0.0, +0.0), vl3v(+1.0, +0.0, +0.0) );
+			vl3d_draw_arrow(&vl3d, vl3d_col_d, vl3v(+0.0, -1.0, +0.0), vl3v(+0.0, +1.0, +0.0) );
+			vl3d_draw_arrow(&vl3d, vl3d_col_d, vl3v(+0.0, +0.0, -1.0), vl3v(+0.0, +0.0, +1.0) );
 			
 			vl3d_draw_arrow(&vl3d, vl3d_col_legacy,
-								vl_vec(-mat[0*3+0], -mat[1*3+0], -mat[2*3+0]),
-								vl_vec(+mat[0*3+0], +mat[1*3+0], +mat[2*3+0])
+								vl3v(-mat[0*3+0], -mat[1*3+0], -mat[2*3+0]),
+								vl3v(+mat[0*3+0], +mat[1*3+0], +mat[2*3+0])
 			);
 			
 			vl3d_draw_arrow(&vl3d, vl3d_col_legacy,
-								vl_vec(-mat[0*3+1], -mat[1*3+1], -mat[2*3+1]),
-								vl_vec(+mat[0*3+1], +mat[1*3+1], +mat[2*3+1])
+								vl3v(-mat[0*3+1], -mat[1*3+1], -mat[2*3+1]),
+								vl3v(+mat[0*3+1], +mat[1*3+1], +mat[2*3+1])
 			);
 			
 			vl3d_draw_arrow(&vl3d, vl3d_col_legacy,
-								vl_vec(-mat[0*3+2], -mat[1*3+2], -mat[2*3+2]),
-								vl_vec(+mat[0*3+2], +mat[1*3+2], +mat[2*3+2])
+								vl3v(-mat[0*3+2], -mat[1*3+2], -mat[2*3+2]),
+								vl3v(+mat[0*3+2], +mat[1*3+2], +mat[2*3+2])
 			);
 
 			vl3d_add_line(&vl3d, (s_vl3d_line) { .color = vl3d_col_d, .p0 = { +1.0, +0.0, +0.0 }, .p1 = { mat[0*3+0], mat[1*3+0], mat[2*3+0] } } );
@@ -218,9 +218,9 @@ inline void imgui_rot(char *label, vlf_t *mat)
 			vl3d_view_save(mat, &vl3d_view);
 			
 			{
-				s_vl_hpr rot_hpr = vl_hpr(mat);
+				s_vl3hpr rot_hpr = vl3hpr_mat(mat);
 				imgui_hpr("##hpr", &rot_hpr, 1.0, "%.0f");
-				vl3_rot(mat, rot_hpr);
+				vl3m_rot(mat, rot_hpr);
 			}
 			
 			break;
@@ -228,8 +228,8 @@ inline void imgui_rot(char *label, vlf_t *mat)
 		
 		case 0x01:
 		{
-			static vlf_t min = -1;
-			static vlf_t max = +1;
+			static float64_t min = -1;
+			static float64_t max = +1;
 			
 			imgui_mat(label, mat, 0.001, &min, &max, "%.001f");
 			
