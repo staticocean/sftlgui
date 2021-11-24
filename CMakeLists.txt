@@ -22,11 +22,8 @@ if (UNIX)
 
     find_package(Vulkan REQUIRED)
     find_package(glfw3 REQUIRED)
-    set(LIBRARIES "glfw;Vulkan::Vulkan")
 
     # Use vulkan headers from glfw:
-    include_directories(${GLFW_DIR}/deps)
-    include_directories(${GLEW_INCLUDE_DIRS})
 
     include_directories(./imgui/backends/)
     include_directories(./imgui/examples/libs/)
