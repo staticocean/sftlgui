@@ -11,8 +11,8 @@
 
 #include <stdlib.h>
 
-#include <libgui/imgui/imgui.h>
-#include <libgui/imgui/imgui_internal.h>
+#include <sftlgui/imgui/imgui.h>
+#include <sftlgui/imgui/imgui_internal.h>
 
 //----------------------------------------------------------------
 

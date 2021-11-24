@@ -4,10 +4,10 @@
 
 //----------------------------------------------------------------
 
-#include <libcommon/vl.h>
-#include <libcommon/vl3d.h>
+#include <sftlstd/vl.h>
+#include <sftlstd/vl3d.h>
 
-#include <libgui/imgui/imgui.h>
+#include <sftlgui/imgui/imgui.h>
 
 //----------------------------------------------------------------
 
