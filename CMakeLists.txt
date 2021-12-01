@@ -54,6 +54,7 @@ add_subdirectory(lib/nfde/)
 
 add_library(sftlgui ${src_imgui} ${src_implot} ${src_clip} ${src_nfde})
 
+target_include_directories(sftlgui PUBLIC include/)
 target_include_directories(sftlgui PUBLIC lib/)
 target_include_directories(sftlgui PUBLIC lib/imgui)
 target_include_directories(sftlgui PUBLIC lib/imgui/backends/glfw/include)
