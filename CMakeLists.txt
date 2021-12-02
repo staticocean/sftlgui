@@ -25,13 +25,13 @@ if (UNIX)
 
     # Use vulkan headers from glfw:
 
-    include_directories(lib/imgui/backends/)
-    include_directories(lib/imgui/examples/libs/)
+    include_directories(imgui/backends/)
+    include_directories(imgui/examples/libs/)
 
     file(GLOB src_imgui
-            lib/imgui/*.cpp
-            lib/imgui/backends/imgui_impl_vulkan.cpp
-            lib/imgui/backends/imgui_impl_glfw.cpp
+            imgui/*.cpp
+            imgui/backends/imgui_impl_vulkan.cpp
+            imgui/backends/imgui_impl_glfw.cpp
             )
 
 endif (UNIX)
@@ -39,29 +39,28 @@ endif (UNIX)
 if (WIN32)
 
     file(GLOB src_imgui
-            lib/imgui/*.cpp
-            lib/imgui/backends/imgui_impl_opengl3.cpp
-            lib/imgui/backends/imgui_impl_glfw.cpp
-            lib/imgui/examples/libs/gl3w/GL/gl3w.c
+            imgui/*.cpp
+            imgui/backends/imgui_impl_opengl3.cpp
+            imgui/backends/imgui_impl_glfw.cpp
+            imgui/examples/libs/gl3w/GL/gl3w.c
             )
 
 endif (WIN32)
 
-file(GLOB src_implot lib/implot/*.cpp)
+file(GLOB src_implot implot/*.cpp)
 
-add_subdirectory(lib/clip/)
-add_subdirectory(lib/nfde/)
+add_subdirectory(clip/)
+add_subdirectory(nfde/)
 
 add_library(sftlgui ${src_imgui} ${src_implot} ${src_clip} ${src_nfde})
 
-target_include_directories(sftlgui PUBLIC include/)
-target_include_directories(sftlgui PUBLIC lib/)
-target_include_directories(sftlgui PUBLIC lib/imgui)
-target_include_directories(sftlgui PUBLIC lib/imgui/backends/glfw/include)
-target_include_directories(sftlgui PUBLIC lib/imgui/backends/gl3w)
-target_include_directories(sftlgui PUBLIC lib/implot)
-target_include_directories(sftlgui PUBLIC lib/clip)
-target_include_directories(sftlgui PUBLIC lib/nfde/src/include)
+target_include_directories(sftlgui PUBLIC ./)
+target_include_directories(sftlgui PUBLIC imgui)
+target_include_directories(sftlgui PUBLIC imgui/backends/glfw/include)
+target_include_directories(sftlgui PUBLIC imgui/backends/gl3w)
+target_include_directories(sftlgui PUBLIC implot)
+target_include_directories(sftlgui PUBLIC clip)
+target_include_directories(sftlgui PUBLIC nfde/src/include)
 
 target_link_libraries(sftlgui PUBLIC clip)
 target_link_libraries(sftlgui PUBLIC nfd)
@@ -73,12 +72,12 @@ if (WIN32)
     target_link_libraries(sftlgui PUBLIC shell32)
     target_link_libraries(sftlgui PUBLIC glu32)
 
-    find_library(lib_glfw3 glfw3 HINTS lib/imgui/examples/libs/glfw/lib-vc2010-64)
+    find_library(lib_glfw3 glfw3 HINTS imgui/examples/libs/glfw/lib-vc2010-64)
     target_link_libraries(sftlgui PUBLIC ${lib_glfw3})
 
-    target_include_directories(sftlgui PUBLIC lib/imgui/backends/)
-    target_include_directories(sftlgui PUBLIC lib/imgui/examples/libs/glfw/include)
-    target_include_directories(sftlgui PUBLIC lib/imgui/examples/libs/gl3w)
+    target_include_directories(sftlgui PUBLIC imgui/backends/)
+    target_include_directories(sftlgui PUBLIC imgui/examples/libs/glfw/include)
+    target_include_directories(sftlgui PUBLIC imgui/examples/libs/gl3w)
 endif(WIN32)
 
 if (UNIX)
