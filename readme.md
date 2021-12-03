@@ -1,3 +1,6 @@
+# sftlgui
+
+![](https://tokei.rs/b1/github/softael/sftlgui)
 
 Contains packaged open-source GUI libraries:
 1. imgui - main GUI framework
