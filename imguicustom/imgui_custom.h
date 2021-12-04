@@ -4,7 +4,10 @@
 
 //----------------------------------------------------------------
 
-#include <sftlstd/vl.h>
+extern "C" {
+    #include <sftlstd/vl.h>
+};
+
 #include <sftlstd/vl3d_imgui.h>
 
 #include <sftlgui/imgui/imgui_internal.h>
@@ -104,8 +107,6 @@ void imgui_hpr (char *label, s_vl3hpr *hpr, float v_speed, char *format)
 //	hpr->heading = vl_rad(hpr_deg[0]);
 //	hpr->pitch   = vl_rad(hpr_deg[1]);
 //	hpr->roll    = vl_rad(hpr_deg[2]);
-//
-	return;
 }
 
 //----------------------------------------------------------------
