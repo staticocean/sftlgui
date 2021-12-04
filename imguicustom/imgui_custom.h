@@ -5,13 +5,14 @@
 //----------------------------------------------------------------
 
 #include <sftlstd/vl.h>
-#include <sftlstd/vl3d.h>
+#include <sftlstd/vl3d_imgui.h>
 
+#include <sftlgui/imgui/imgui_internal.h>
 #include <sftlgui/imgui/imgui.h>
 
 //----------------------------------------------------------------
 
-extern inline void imgui_mat_get (void *ptr, f64_t *mat, f64_t *def)
+void imgui_mat_get (void *ptr, f64_t *mat, f64_t *def)
 {
 	ImGuiWindow* window = ImGui::GetCurrentWindow();
 	
@@ -31,7 +32,7 @@ extern inline void imgui_mat_get (void *ptr, f64_t *mat, f64_t *def)
 
 //----------------------------------------------------------------
 
-extern inline void imgui_mat_set (void *ptr, f64_t *mat)
+void imgui_mat_set (void *ptr, f64_t *mat)
 {
 	ImGuiWindow* window = ImGui::GetCurrentWindow();
 	
@@ -44,7 +45,7 @@ extern inline void imgui_mat_set (void *ptr, f64_t *mat)
 
 //----------------------------------------------------------------
 
-extern inline void imgui_vec (char *label, f64_t *vec,
+void imgui_vec (char *label, f64_t *vec,
                               float v_speed, f64_t *min, f64_t *max, char *format)
 {
 	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
@@ -53,7 +54,7 @@ extern inline void imgui_vec (char *label, f64_t *vec,
 
 //----------------------------------------------------------------
 
-extern inline void imgui_hpr (char *label, s_vl3hpr *hpr, float v_speed, char *format)
+void imgui_hpr (char *label, s_vl3hpr *hpr, float v_speed, char *format)
 {
 	static f64_t heading_min = 0.0;
 	static f64_t heading_max = 360.0;
@@ -109,7 +110,7 @@ extern inline void imgui_hpr (char *label, s_vl3hpr *hpr, float v_speed, char *f
 
 //----------------------------------------------------------------
 
-extern inline void imgui_mat (char *label, f64_t *mat, float v_speed, f64_t *min, f64_t *max, char *format)
+void imgui_mat (char *label, f64_t *mat, float v_speed, f64_t *min, f64_t *max, char *format)
 {
 	ImGui::PushID(label);
 	
@@ -132,7 +133,7 @@ extern inline void imgui_mat (char *label, f64_t *mat, float v_speed, f64_t *min
 
 //----------------------------------------------------------------
 
-extern inline void imgui_rot (char *label, f64_t *mat)
+void imgui_rot (char *label, f64_t *mat)
 {
 	enum st
 	{
@@ -247,7 +248,7 @@ extern inline void imgui_rot (char *label, f64_t *mat)
 
 //----------------------------------------------------------------
 
-extern inline bool imgui_hash (char *label, u32_t hash)
+bool imgui_hash (char *label, u32_t hash)
 {
 	ImGui::PushID(label);
 	
@@ -289,7 +290,7 @@ extern inline bool imgui_hash (char *label, u32_t hash)
 
 //----------------------------------------------------------------
 
-extern inline void imgui_bool (char *label, ImVec2 size, u8_t *data)
+void imgui_bool (char *label, ImVec2 size, u8_t *data)
 {
 //	ImGuiStyle& style = ImGui::GetStyle();
 //	ImU32 col_text_u32 = ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]);
@@ -346,7 +347,7 @@ extern inline void imgui_bool (char *label, ImVec2 size, u8_t *data)
 
 //----------------------------------------------------------------
 
-extern inline void imgui_switch (char *label, char **labels, ImVec2 size, u8_t *data, int flags = ImGuiButtonFlags_None)
+void imgui_switch (char *label, char **labels, ImVec2 size, u8_t *data, int flags = ImGuiButtonFlags_None)
 {
 	ImGui::PushID(label);
 	
@@ -362,7 +363,7 @@ extern inline void imgui_switch (char *label, char **labels, ImVec2 size, u8_t *
 
 //----------------------------------------------------------------
 
-extern inline void imgui_switchbox (char *label, char **labels, ImVec2 size, u8_t *data)
+void imgui_switchbox (char *label, char **labels, ImVec2 size, u8_t *data)
 {
 	ImGui::PushID(label);
 
@@ -418,7 +419,7 @@ extern inline void imgui_switchbox (char *label, char **labels, ImVec2 size, u8_
 
 //----------------------------------------------------------------
 
-extern inline void __imgui_lla_elem__ (char *label, char **nswe, f64_t *range, f64_t *value, float width)
+void __imgui_lla_elem__ (char *label, char **nswe, f64_t *range, f64_t *value, float width)
 {
     ImGuiWindow *window = ImGui::GetCurrentWindow();
 
@@ -511,7 +512,8 @@ extern inline void __imgui_lla_elem__ (char *label, char **nswe, f64_t *range, f
 
 //----------------------------------------------------------------
 
-extern inline void imgui_lat (char *label, f64_t *lat, float width = 160)
+extern inline
+void imgui_lat (char *label, f64_t *lat, float width = 160)
 {
     __imgui_lla_elem__(label, (char*[2]){ "S", "N" },
                      (f64_t[2]) { vl_rad(-90), vl_rad(+90) }, lat, width);
@@ -519,7 +521,8 @@ extern inline void imgui_lat (char *label, f64_t *lat, float width = 160)
 
 //----------------------------------------------------------------
 
-extern inline void imgui_lon (char *label, f64_t *lon, float width = 160)
+extern inline
+void imgui_lon (char *label, f64_t *lon, float width = 160)
 {
     __imgui_lla_elem__(label, (char*[2]){ "W", "E" },
                      (f64_t[2]) { vl_rad(-180), vl_rad(+180) }, lon, width);
@@ -539,7 +542,7 @@ typedef struct
 	
 }	s_imgui_datetime;
 
-extern inline void imgui_datetime (char *label,
+void imgui_datetime (char *label,
 		int *day, int *month, int *year,
 		int *hour, int *min, int *sec)
 {
@@ -598,7 +601,8 @@ extern inline void*  imgui_load_void    (char *label            ) { return      
 
 //----------------------------------------------------------------
 
-extern inline void gui_autowidth (void)
+extern inline
+void gui_autowidth (void)
 {
 	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 }
@@ -619,7 +623,7 @@ extern inline void gui_autowidth (void)
 
 //----------------------------------------------------------------
 
-extern inline bool imgui_loadbar (const char* label, float value,
+bool imgui_loadbar (const char* label, float value,
                                   const ImVec2& size_arg, const ImU32& bg_col, const ImU32& fg_col)
 {
 	ImGuiWindow* window = ImGui::GetCurrentWindow();
@@ -649,7 +653,7 @@ extern inline bool imgui_loadbar (const char* label, float value,
 
 //----------------------------------------------------------------
 
-extern inline bool imgui_loadspin (const char* label,
+bool imgui_loadspin (const char* label,
                                    float radius, int thickness, const ImU32& color)
 {
 	ImGuiWindow* window = ImGui::GetCurrentWindow();
