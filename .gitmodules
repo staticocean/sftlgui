@@ -1,0 +1,15 @@
+[submodule "lib/imgui"]
+	path = lib/imgui
+	url = https://github.com/ocornut/imgui.git
+[submodule "lib/implot"]
+	path = lib/implot
+	url = https://github.com/epezent/implot.git
+[submodule "lib/clip"]
+	path = lib/clip
+	url = https://github.com/dacap/clip.git
+[submodule "lib/tinymat"]
+	path = lib/tinymat
+	url = https://github.com/jkriege2/TinyMAT.git
+[submodule "lib/nfde"]
+	path = lib/nfde
+	url = https://github.com/btzy/nativefiledialog-extended.git
