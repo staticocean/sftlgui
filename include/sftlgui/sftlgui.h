@@ -13,8 +13,8 @@
 #include <implot/implot.h>
 #include <nfde/src/include/nfd.h>
 #include <clip/clip.h>
-#include <imguicustom/imgui_custom.h>
-#include <imguicustom/imgui_theme.h>
+#include <sftlgui/imgui_custom.h>
+#include <sftlgui/imgui_theme.h>
 
 //----------------------------------------------------------------
 
