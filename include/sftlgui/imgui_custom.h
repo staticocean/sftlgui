@@ -15,7 +15,7 @@ extern "C" {
 
 //----------------------------------------------------------------
 
-void imgui_mat_get (void *ptr, f64_t *mat, f64_t *def)
+void imgui_mat_get (void *ptr, t_f64 *mat, t_f64 *def)
 {
 	ImGuiWindow* window = ImGui::GetCurrentWindow();
 	
@@ -35,7 +35,7 @@ void imgui_mat_get (void *ptr, f64_t *mat, f64_t *def)
 
 //----------------------------------------------------------------
 
-void imgui_mat_set (void *ptr, f64_t *mat)
+void imgui_mat_set (void *ptr, t_f64 *mat)
 {
 	ImGuiWindow* window = ImGui::GetCurrentWindow();
 	
@@ -48,8 +48,8 @@ void imgui_mat_set (void *ptr, f64_t *mat)
 
 //----------------------------------------------------------------
 
-void imgui_vec (char *label, f64_t *vec,
-                              float v_speed, f64_t *min, f64_t *max, char *format)
+void imgui_vec (char *label, t_f64 *vec,
+                              float v_speed, t_f64 *min, t_f64 *max, char *format)
 {
 	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
 	ImGui::DragScalarN(label, ImGuiDataType_Double, vec, 3, v_speed, min, max, format);
@@ -59,14 +59,14 @@ void imgui_vec (char *label, f64_t *vec,
 
 void imgui_hpr (char *label, s_vl3hpr *hpr, float v_speed, char *format)
 {
-	static f64_t heading_min = 0.0;
-	static f64_t heading_max = 360.0;
+	static t_f64 heading_min = 0.0;
+	static t_f64 heading_max = 360.0;
 	
-	static f64_t pitch_min = -90.0;
-	static f64_t pitch_max = +90.0;
+	static t_f64 pitch_min = -90.0;
+	static t_f64 pitch_max = +90.0;
 	
-	static f64_t roll_min = -180.0;
-	static f64_t roll_max = +180.0;
+	static t_f64 roll_min = -180.0;
+	static t_f64 roll_max = +180.0;
 	
 	s_vl3hpr hpr_deg;
 	
@@ -74,7 +74,7 @@ void imgui_hpr (char *label, s_vl3hpr *hpr, float v_speed, char *format)
 	hpr_deg.pitch   = vl_deg(hpr->pitch);
 	hpr_deg.roll    = vl_deg(hpr->roll);
 
-//	f64_t hpr_deg[3] = {
+//	t_f64 hpr_deg[3] = {
 //			(float) vl_deg(hpr->heading),
 //			(float) vl_deg(hpr->pitch),
 //			(float) vl_deg(hpr->roll)
@@ -111,7 +111,7 @@ void imgui_hpr (char *label, s_vl3hpr *hpr, float v_speed, char *format)
 
 //----------------------------------------------------------------
 
-void imgui_mat (char *label, f64_t *mat, float v_speed, f64_t *min, f64_t *max, char *format)
+void imgui_mat (char *label, t_f64 *mat, float v_speed, t_f64 *min, t_f64 *max, char *format)
 {
 	ImGui::PushID(label);
 	
@@ -134,7 +134,7 @@ void imgui_mat (char *label, f64_t *mat, float v_speed, f64_t *min, f64_t *max, 
 
 //----------------------------------------------------------------
 
-void imgui_rot (char *label, f64_t *mat)
+void imgui_rot (char *label, t_f64 *mat)
 {
 	enum st
 	{
@@ -223,8 +223,8 @@ void imgui_rot (char *label, f64_t *mat)
 		
 		case 0x01:
 		{
-			static f64_t min = -1;
-			static f64_t max = +1;
+			static t_f64 min = -1;
+			static t_f64 max = +1;
 			
 			imgui_mat(label, mat, 0.001, &min, &max, "%.001f");
 			
@@ -249,7 +249,7 @@ void imgui_rot (char *label, f64_t *mat)
 
 //----------------------------------------------------------------
 
-bool imgui_hash (char *label, u32_t hash)
+bool imgui_hash (char *label, t_u32 hash)
 {
 	ImGui::PushID(label);
 	
@@ -268,7 +268,7 @@ bool imgui_hash (char *label, u32_t hash)
 	if (ImGui::InvisibleButton(label, ImVec2(width, height)))
 	{ res = true; }
 	
-	u32_t col_table[2] = {
+	t_u32 col_table[2] = {
 			ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_FrameBg]), vl3d_col_l
 	};
 	
@@ -291,7 +291,7 @@ bool imgui_hash (char *label, u32_t hash)
 
 //----------------------------------------------------------------
 
-void imgui_bool (char *label, ImVec2 size, u8_t *data)
+void imgui_bool (char *label, ImVec2 size, t_u8 *data)
 {
 //	ImGuiStyle& style = ImGui::GetStyle();
 //	ImU32 col_text_u32 = ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]);
@@ -348,7 +348,7 @@ void imgui_bool (char *label, ImVec2 size, u8_t *data)
 
 //----------------------------------------------------------------
 
-void imgui_switch (char *label, char **labels, ImVec2 size, u8_t *data, int flags = ImGuiButtonFlags_None)
+void imgui_switch (char *label, char **labels, ImVec2 size, t_u8 *data, int flags = ImGuiButtonFlags_None)
 {
 	ImGui::PushID(label);
 	
@@ -364,7 +364,7 @@ void imgui_switch (char *label, char **labels, ImVec2 size, u8_t *data, int flag
 
 //----------------------------------------------------------------
 
-void imgui_switchbox (char *label, char **labels, ImVec2 size, u8_t *data)
+void imgui_switchbox (char *label, char **labels, ImVec2 size, t_u8 *data)
 {
 	ImGui::PushID(label);
 
@@ -420,7 +420,7 @@ void imgui_switchbox (char *label, char **labels, ImVec2 size, u8_t *data)
 
 //----------------------------------------------------------------
 
-void __imgui_lla_elem__ (char *label, char **nswe, f64_t *range, f64_t *value, float width)
+void __imgui_lla_elem__ (char *label, char **nswe, t_f64 *range, t_f64 *value, float width)
 {
     ImGuiWindow *window = ImGui::GetCurrentWindow();
 
@@ -428,17 +428,17 @@ void __imgui_lla_elem__ (char *label, char **nswe, f64_t *range, f64_t *value, f
     sprintf(mode_str, "##%s_%s", label, "mode");
     ImGuiID mode_id = ImGui::GetID(mode_str);
 
-    u8_t mode = window->StateStorage.GetInt(mode_id, 0x00);
+    t_u8 mode = window->StateStorage.GetInt(mode_id, 0x00);
 
     // remove sign life is easier that way
     // we MUST AND WILL resore it in the end
-    u8_t nswe_sign = (*value < 0.0) ? 0x00 : 0x01;
+    t_u8 nswe_sign = (*value < 0.0) ? 0x00 : 0x01;
     *value = fabs(*value);
 
-    f64_t value_deg = vl_deg(*value);
+    t_f64 value_deg = vl_deg(*value);
     int dms_d = (int) value_deg;
     int dms_m = (int) ((value_deg - dms_d) * 60);
-    f64_t dms_s = (value_deg - dms_d - dms_m / (f64_t) 60.0) * 3600;
+    t_f64 dms_s = (value_deg - dms_d - dms_m / (t_f64) 60.0) * 3600;
 
     ImGui::PushID(label);
     ImGui::BeginGroup();
@@ -463,8 +463,8 @@ void __imgui_lla_elem__ (char *label, char **nswe, f64_t *range, f64_t *value, f
             dms_m = (dms_m <   0.0) ?  0.0 : dms_m;
             dms_m = (dms_m >= 60.0) ? 60.0 : dms_m;
 
-            f64_t value_new = vl_rad(
-                    (f64_t) dms_d + (f64_t) dms_m / 60.0 + (f64_t) dms_s / 3600.0);
+            t_f64 value_new = vl_rad(
+                    (t_f64) dms_d + (t_f64) dms_m / 60.0 + (t_f64) dms_s / 3600.0);
 
             *value = value_new;
 
@@ -473,7 +473,7 @@ void __imgui_lla_elem__ (char *label, char **nswe, f64_t *range, f64_t *value, f
 
         default:
         {
-            f64_t value_new;
+            t_f64 value_new;
 
             char deg_str[32];
             sprintf(deg_str, "% 10.6f°", value_deg);
@@ -514,19 +514,19 @@ void __imgui_lla_elem__ (char *label, char **nswe, f64_t *range, f64_t *value, f
 //----------------------------------------------------------------
 
 extern inline
-void imgui_lat (char *label, f64_t *lat, float width = 160)
+void imgui_lat (char *label, t_f64 *lat, float width = 160)
 {
     __imgui_lla_elem__(label, (char*[2]){ "S", "N" },
-                     (f64_t[2]) { vl_rad(-90), vl_rad(+90) }, lat, width);
+                     (t_f64[2]) { vl_rad(-90), vl_rad(+90) }, lat, width);
 }
 
 //----------------------------------------------------------------
 
 extern inline
-void imgui_lon (char *label, f64_t *lon, float width = 160)
+void imgui_lon (char *label, t_f64 *lon, float width = 160)
 {
     __imgui_lla_elem__(label, (char*[2]){ "W", "E" },
-                     (f64_t[2]) { vl_rad(-180), vl_rad(+180) }, lon, width);
+                     (t_f64[2]) { vl_rad(-180), vl_rad(+180) }, lon, width);
 }
 
 //----------------------------------------------------------------
@@ -582,22 +582,22 @@ void imgui_datetime (char *label,
 
 //----------------------------------------------------------------
 
-extern inline void 	 imgui_save_uint8   (char *label, u8_t  data) { ImGui::GetCurrentWindow()->StateStorage.SetInt    (ImGui::GetID(label), (int) data); return; }
-extern inline void 	 imgui_save_uint16  (char *label, u16_t data) { ImGui::GetCurrentWindow()->StateStorage.SetInt    (ImGui::GetID(label), (int) data); return; }
-extern inline void 	 imgui_save_uint32  (char *label, u32_t data) { ImGui::GetCurrentWindow()->StateStorage.SetInt    (ImGui::GetID(label), (int) data); return; }
-extern inline void 	 imgui_save_int8    (char *label, s8_t  data) { ImGui::GetCurrentWindow()->StateStorage.SetInt    (ImGui::GetID(label), (int) data); return; }
-extern inline void 	 imgui_save_int16   (char *label, s16_t data) { ImGui::GetCurrentWindow()->StateStorage.SetInt    (ImGui::GetID(label), (int) data); return; }
-extern inline void 	 imgui_save_int32   (char *label, s32_t data) { ImGui::GetCurrentWindow()->StateStorage.SetInt    (ImGui::GetID(label), (int) data); return; }
-extern inline void 	 imgui_save_float32 (char *label, f32_t data) { ImGui::GetCurrentWindow()->StateStorage.SetFloat  (ImGui::GetID(label),       data); return; }
+extern inline void 	 imgui_save_uint8   (char *label, t_u8  data) { ImGui::GetCurrentWindow()->StateStorage.SetInt    (ImGui::GetID(label), (int) data); return; }
+extern inline void 	 imgui_save_uint16  (char *label, t_u16 data) { ImGui::GetCurrentWindow()->StateStorage.SetInt    (ImGui::GetID(label), (int) data); return; }
+extern inline void 	 imgui_save_uint32  (char *label, t_u32 data) { ImGui::GetCurrentWindow()->StateStorage.SetInt    (ImGui::GetID(label), (int) data); return; }
+extern inline void 	 imgui_save_int8    (char *label, t_s8  data) { ImGui::GetCurrentWindow()->StateStorage.SetInt    (ImGui::GetID(label), (int) data); return; }
+extern inline void 	 imgui_save_int16   (char *label, t_s16 data) { ImGui::GetCurrentWindow()->StateStorage.SetInt    (ImGui::GetID(label), (int) data); return; }
+extern inline void 	 imgui_save_int32   (char *label, t_s32 data) { ImGui::GetCurrentWindow()->StateStorage.SetInt    (ImGui::GetID(label), (int) data); return; }
+extern inline void 	 imgui_save_float32 (char *label, t_f32 data) { ImGui::GetCurrentWindow()->StateStorage.SetFloat  (ImGui::GetID(label),       data); return; }
 extern inline void 	 imgui_save_void    (char *label, void *data) { ImGui::GetCurrentWindow()->StateStorage.SetVoidPtr(ImGui::GetID(label),       data); return; }
 
-extern inline u8_t   imgui_load_uint8   (char *label, u8_t  def ) { return (u8_t  ) ImGui::GetCurrentWindow()->StateStorage.GetInt    (ImGui::GetID(label), (int) def); }
-extern inline u16_t  imgui_load_uint16  (char *label, u16_t def ) { return (u16_t ) ImGui::GetCurrentWindow()->StateStorage.GetInt    (ImGui::GetID(label), (int) def); }
-extern inline u32_t  imgui_load_uint32  (char *label, u32_t def ) { return (u32_t ) ImGui::GetCurrentWindow()->StateStorage.GetInt    (ImGui::GetID(label), (int) def); }
-extern inline s8_t   imgui_load_int8    (char *label, s8_t  def ) { return (s8_t  ) ImGui::GetCurrentWindow()->StateStorage.GetInt    (ImGui::GetID(label), (int) def); }
-extern inline s16_t  imgui_load_int16   (char *label, s16_t def ) { return (s16_t ) ImGui::GetCurrentWindow()->StateStorage.GetInt    (ImGui::GetID(label), (int) def); }
-extern inline s32_t  imgui_load_int32   (char *label, s32_t def ) { return (s32_t ) ImGui::GetCurrentWindow()->StateStorage.GetInt    (ImGui::GetID(label), (int) def); }
-extern inline f32_t  imgui_load_float32 (char *label, f32_t def ) { return (f32_t ) ImGui::GetCurrentWindow()->StateStorage.GetFloat  (ImGui::GetID(label),       def); }
+extern inline t_u8   imgui_load_uint8   (char *label, t_u8  def ) { return (t_u8  ) ImGui::GetCurrentWindow()->StateStorage.GetInt    (ImGui::GetID(label), (int) def); }
+extern inline t_u16  imgui_load_uint16  (char *label, t_u16 def ) { return (t_u16 ) ImGui::GetCurrentWindow()->StateStorage.GetInt    (ImGui::GetID(label), (int) def); }
+extern inline t_u32  imgui_load_uint32  (char *label, t_u32 def ) { return (t_u32 ) ImGui::GetCurrentWindow()->StateStorage.GetInt    (ImGui::GetID(label), (int) def); }
+extern inline t_s8   imgui_load_int8    (char *label, t_s8  def ) { return (t_s8  ) ImGui::GetCurrentWindow()->StateStorage.GetInt    (ImGui::GetID(label), (int) def); }
+extern inline t_s16  imgui_load_int16   (char *label, t_s16 def ) { return (t_s16 ) ImGui::GetCurrentWindow()->StateStorage.GetInt    (ImGui::GetID(label), (int) def); }
+extern inline t_s32  imgui_load_int32   (char *label, t_s32 def ) { return (t_s32 ) ImGui::GetCurrentWindow()->StateStorage.GetInt    (ImGui::GetID(label), (int) def); }
+extern inline t_f32  imgui_load_float32 (char *label, t_f32 def ) { return (t_f32 ) ImGui::GetCurrentWindow()->StateStorage.GetFloat  (ImGui::GetID(label),       def); }
 extern inline void*  imgui_load_void    (char *label            ) { return          ImGui::GetCurrentWindow()->StateStorage.GetVoidPtr(ImGui::GetID(label)           ); }
 
 //----------------------------------------------------------------
