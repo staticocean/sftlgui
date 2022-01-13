@@ -51,7 +51,7 @@ void imgui_mat_set (void *ptr, t_f64 *mat)
 void imgui_vec (char *label, t_f64 *vec,
                               float v_speed, t_f64 *min, t_f64 *max, char *format)
 {
-	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 	ImGui::DragScalarN(label, ImGuiDataType_Double, vec, 3, v_speed, min, max, format);
 }
 
@@ -80,7 +80,7 @@ void imgui_hpr (char *label, s_vl3hpr *hpr, float v_speed, char *format)
 //			(float) vl_deg(hpr->roll)
 //	};
 //
-	float item_width = ImGui::GetContentRegionAvailWidth() / 3 - 2.0/3.0 * ImGui::GetStyle().ItemInnerSpacing.x;
+	float item_width = ImGui::GetContentRegionAvail().x / 3 - 2.0/3.0 * ImGui::GetStyle().ItemInnerSpacing.x;
 	
 	ImGui::PushID(label);
 
@@ -122,7 +122,7 @@ void imgui_mat (char *label, t_f64 *mat, float v_speed, t_f64 *min, t_f64 *max, 
 	for (int i = 0; i < 3; ++i)
 	{
 		ImGui::PushID(i);
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		ImGui::DragScalarN("##mat_view", ImGuiDataType_Double, &mat[3 * i], 3, v_speed, min, max, format);
 		ImGui::PopID();
 	}
@@ -202,8 +202,8 @@ void imgui_rot (char *label, t_f64 *mat)
 			vl3d_add_text(&vl3d, (s_vl3d_text) { .color = vl3d_col_legacy, .p0 = { mat[0*3+2], mat[1*3+2], mat[2*3+2] }, .data = "Z" } );
 			
 			vl3d_begin(&vl3d, ImVec2(
-					ImGui::GetContentRegionAvailWidth(),
-					ImGui::GetContentRegionAvailWidth())
+					ImGui::GetContentRegionAvail().x,
+					ImGui::GetContentRegionAvail().x)
 					);
 			
 			vl3d_view_ctrl3d(&vl3d, &vl3d_view);
@@ -260,7 +260,7 @@ bool imgui_hash (char *label, t_u32 hash)
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
 	
 	float dy = ImGui::GetTextLineHeightWithSpacing() * 0.5;
-	float dx = ImGui::GetContentRegionAvailWidth() / 16.0;
+	float dx = ImGui::GetContentRegionAvail().x / 16.0;
 	
 	float height = 2 * dy;
 	float width  = 16 * dx;
@@ -605,7 +605,7 @@ extern inline void*  imgui_load_void    (char *label            ) { return      
 extern inline
 void gui_autowidth (void)
 {
-	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 }
 
 //inline void gui_hint(const char* fmt, ...)
@@ -638,7 +638,7 @@ bool imgui_loadbar (const char* label, float value,
 	ImVec2 pos = window->DC.CursorPos;
 	ImVec2 size = size_arg;
 	
-	if (size.x < 0) size.x = ImGui::GetContentRegionAvailWidth();
+	if (size.x < 0) size.x = ImGui::GetContentRegionAvail().x;
 	
 	const ImRect bb(pos, ImVec2(pos.x + size.x, pos.y + size.y));
 	ImGui::ItemSize(bb, style.FramePadding.y);
