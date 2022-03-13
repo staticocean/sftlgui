@@ -5,7 +5,7 @@
 //----------------------------------------------------------------
 
 extern "C" {
-    #include <sftlstd/vl.h>
+    #include <sftlstd/vld3.h>
 };
 
 #include <sftlstd/vl3d_imgui.h>
@@ -22,15 +22,15 @@ void imgui_mat_get (void *ptr, t_f64 *mat, t_f64 *def)
 	s_vl3hpr def_hpr = vl3hpr_mat(def);
 	
 	s_vl3hpr hpr = {
-//			.heading = window->StateStorage.GetFloat(ImGui::GetID((void*) ((uintptr_t) ptr + 0x00)), vl_rad(45)),
-//			.pitch 	 = window->StateStorage.GetFloat(ImGui::GetID((void*) ((uintptr_t) ptr + 0x01)), vl_rad(45)),
-//			.roll    = window->StateStorage.GetFloat(ImGui::GetID((void*) ((uintptr_t) ptr + 0x02)), vl_rad( 0)),
+//			.heading = window->StateStorage.GetFloat(ImGui::GetID((void*) ((uintptr_t) ptr + 0x00)), vld_rad(45)),
+//			.pitch 	 = window->StateStorage.GetFloat(ImGui::GetID((void*) ((uintptr_t) ptr + 0x01)), vld_rad(45)),
+//			.roll    = window->StateStorage.GetFloat(ImGui::GetID((void*) ((uintptr_t) ptr + 0x02)), vld_rad( 0)),
 			.heading = window->StateStorage.GetFloat(ImGui::GetID((void*) ((uintptr_t) ptr + 0x00)), def_hpr.heading),
 			.pitch 	 = window->StateStorage.GetFloat(ImGui::GetID((void*) ((uintptr_t) ptr + 0x01)), def_hpr.pitch),
 			.roll    = window->StateStorage.GetFloat(ImGui::GetID((void*) ((uintptr_t) ptr + 0x02)), def_hpr.roll),
 	};
 	
-	vl3m_rot(mat, hpr);
+	vld3m_rot(mat, hpr);
 }
 
 //----------------------------------------------------------------
@@ -70,14 +70,14 @@ void imgui_hpr (char *label, s_vl3hpr *hpr, float v_speed, char *format)
 	
 	s_vl3hpr hpr_deg;
 	
-	hpr_deg.heading = vl_deg(hpr->heading);
-	hpr_deg.pitch   = vl_deg(hpr->pitch);
-	hpr_deg.roll    = vl_deg(hpr->roll);
+	hpr_deg.heading = vld_deg(hpr->heading);
+	hpr_deg.pitch   = vld_deg(hpr->pitch);
+	hpr_deg.roll    = vld_deg(hpr->roll);
 
 //	t_f64 hpr_deg[3] = {
-//			(float) vl_deg(hpr->heading),
-//			(float) vl_deg(hpr->pitch),
-//			(float) vl_deg(hpr->roll)
+//			(float) vld_deg(hpr->heading),
+//			(float) vld_deg(hpr->pitch),
+//			(float) vld_deg(hpr->roll)
 //	};
 //
 	float item_width = ImGui::GetContentRegionAvail().x / 3 - 2.0/3.0 * ImGui::GetStyle().ItemInnerSpacing.x;
@@ -100,13 +100,13 @@ void imgui_hpr (char *label, s_vl3hpr *hpr, float v_speed, char *format)
 	
 	ImGui::PopID();
 	
-	hpr->heading = vl_rad(hpr_deg.heading);
-	hpr->pitch   = vl_rad(hpr_deg.pitch);
-	hpr->roll    = vl_rad(hpr_deg.roll);
+	hpr->heading = vld_rad(hpr_deg.heading);
+	hpr->pitch   = vld_rad(hpr_deg.pitch);
+	hpr->roll    = vld_rad(hpr_deg.roll);
 
-//	hpr->heading = vl_rad(hpr_deg[0]);
-//	hpr->pitch   = vl_rad(hpr_deg[1]);
-//	hpr->roll    = vl_rad(hpr_deg[2]);
+//	hpr->heading = vld_rad(hpr_deg[0]);
+//	hpr->pitch   = vld_rad(hpr_deg[1]);
+//	hpr->roll    = vld_rad(hpr_deg[2]);
 }
 
 //----------------------------------------------------------------
@@ -163,30 +163,30 @@ void imgui_rot (char *label, t_f64 *mat)
 			
 			vl3d_view_load(mat, &vl3d_view, (s_vl3d_view) {});
 			vl3d_view.scale = 0.75;
-			vl3v_set(vl3d_view.pos, 0.0);
+			vld3v_set(vl3d_view.pos, 0.0);
 			
 			vl3d_init(&vl3d, (s_vl3d_attr) {
 				.obj_sz = sizeof(vl3d_obj_list) / sizeof(s_vl3d_obj),
 				.obj_ls = vl3d_obj_list
 			});
 			
-			vl3d_draw_arrow(&vl3d, vl3d_col_d, vl3v(-1.0, +0.0, +0.0), vl3v(+1.0, +0.0, +0.0) );
-			vl3d_draw_arrow(&vl3d, vl3d_col_d, vl3v(+0.0, -1.0, +0.0), vl3v(+0.0, +1.0, +0.0) );
-			vl3d_draw_arrow(&vl3d, vl3d_col_d, vl3v(+0.0, +0.0, -1.0), vl3v(+0.0, +0.0, +1.0) );
+			vl3d_draw_arrow(&vl3d, vl3d_col_d, vld3v(-1.0, +0.0, +0.0), vld3v(+1.0, +0.0, +0.0) );
+			vl3d_draw_arrow(&vl3d, vl3d_col_d, vld3v(+0.0, -1.0, +0.0), vld3v(+0.0, +1.0, +0.0) );
+			vl3d_draw_arrow(&vl3d, vl3d_col_d, vld3v(+0.0, +0.0, -1.0), vld3v(+0.0, +0.0, +1.0) );
 			
 			vl3d_draw_arrow(&vl3d, vl3d_col_legacy,
-								vl3v(-mat[0*3+0], -mat[1*3+0], -mat[2*3+0]),
-								vl3v(+mat[0*3+0], +mat[1*3+0], +mat[2*3+0])
+								vld3v(-mat[0*3+0], -mat[1*3+0], -mat[2*3+0]),
+								vld3v(+mat[0*3+0], +mat[1*3+0], +mat[2*3+0])
 			);
 			
 			vl3d_draw_arrow(&vl3d, vl3d_col_legacy,
-								vl3v(-mat[0*3+1], -mat[1*3+1], -mat[2*3+1]),
-								vl3v(+mat[0*3+1], +mat[1*3+1], +mat[2*3+1])
+								vld3v(-mat[0*3+1], -mat[1*3+1], -mat[2*3+1]),
+								vld3v(+mat[0*3+1], +mat[1*3+1], +mat[2*3+1])
 			);
 			
 			vl3d_draw_arrow(&vl3d, vl3d_col_legacy,
-								vl3v(-mat[0*3+2], -mat[1*3+2], -mat[2*3+2]),
-								vl3v(+mat[0*3+2], +mat[1*3+2], +mat[2*3+2])
+								vld3v(-mat[0*3+2], -mat[1*3+2], -mat[2*3+2]),
+								vld3v(+mat[0*3+2], +mat[1*3+2], +mat[2*3+2])
 			);
 
 			vl3d_add_line(&vl3d, (s_vl3d_line) { .color = vl3d_col_d, .p0 = { +1.0, +0.0, +0.0 }, .p1 = { mat[0*3+0], mat[1*3+0], mat[2*3+0] } } );
@@ -215,7 +215,7 @@ void imgui_rot (char *label, t_f64 *mat)
 			{
 				s_vl3hpr rot_hpr = vl3hpr_mat(mat);
 				imgui_hpr("##hpr", &rot_hpr, 1.0, "%.0f");
-				vl3m_rot(mat, rot_hpr);
+				vld3m_rot(mat, rot_hpr);
 			}
 			
 			break;
@@ -435,7 +435,7 @@ void __imgui_lla_elem__ (char *label, char **nswe, t_f64 *range, t_f64 *value, f
     t_u8 nswe_sign = (*value < 0.0) ? 0x00 : 0x01;
     *value = fabs(*value);
 
-    t_f64 value_deg = vl_deg(*value);
+    t_f64 value_deg = vld_deg(*value);
     int dms_d = (int) value_deg;
     int dms_m = (int) ((value_deg - dms_d) * 60);
     t_f64 dms_s = (value_deg - dms_d - dms_m / (t_f64) 60.0) * 3600;
@@ -463,7 +463,7 @@ void __imgui_lla_elem__ (char *label, char **nswe, t_f64 *range, t_f64 *value, f
             dms_m = (dms_m <   0.0) ?  0.0 : dms_m;
             dms_m = (dms_m >= 60.0) ? 60.0 : dms_m;
 
-            t_f64 value_new = vl_rad(
+            t_f64 value_new = vld_rad(
                     (t_f64) dms_d + (t_f64) dms_m / 60.0 + (t_f64) dms_s / 3600.0);
 
             *value = value_new;
@@ -480,7 +480,7 @@ void __imgui_lla_elem__ (char *label, char **nswe, t_f64 *range, t_f64 *value, f
             ImGui::InputText("##deg", deg_str, sizeof(deg_str));
             sscanf(deg_str, "%lf°", &value_new);
 
-            value_new = vl_rad(value_new);
+            value_new = vld_rad(value_new);
 
             *value = value_new;
 
@@ -517,7 +517,7 @@ extern inline
 void imgui_lat (char *label, t_f64 *lat, float width = 160)
 {
     __imgui_lla_elem__(label, (char*[2]){ "S", "N" },
-                     (t_f64[2]) { vl_rad(-90), vl_rad(+90) }, lat, width);
+                     (t_f64[2]) { vld_rad(-90), vld_rad(+90) }, lat, width);
 }
 
 //----------------------------------------------------------------
@@ -526,7 +526,7 @@ extern inline
 void imgui_lon (char *label, t_f64 *lon, float width = 160)
 {
     __imgui_lla_elem__(label, (char*[2]){ "W", "E" },
-                     (t_f64[2]) { vl_rad(-180), vl_rad(+180) }, lon, width);
+                     (t_f64[2]) { vld_rad(-180), vld_rad(+180) }, lon, width);
 }
 
 //----------------------------------------------------------------
