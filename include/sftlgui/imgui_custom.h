@@ -48,11 +48,22 @@ void imgui_mat_set (void *ptr, t_f64 *mat)
 
 //----------------------------------------------------------------
 
-void imgui_vec (char *label, t_f64 *vec,
-                              float v_speed, t_f64 *min, t_f64 *max, char *format)
+void imgui_vec3 (char *label, t_f64 *vec,
+                float v_speed, t_f64 min, t_f64 max, char *format)
 {
-	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-	ImGui::DragScalarN(label, ImGuiDataType_Double, vec, 3, v_speed, min, max, format);
+    ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+    ImGui::DragScalarN(label, ImGuiDataType_Double, vec, 3, v_speed, &min, &max, format);
+}
+
+//----------------------------------------------------------------
+
+void imgui_vec (t_s32 dim, char *label, t_f64 *vec,
+                float v_speed, t_f64 min, t_f64 max, char *format)
+{
+    ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+
+    ImGui::DragScalarN(label, ImGuiDataType_Double,
+                       vec, dim, v_speed, &min, &max, format);
 }
 
 //----------------------------------------------------------------
